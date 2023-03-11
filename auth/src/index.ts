@@ -1,13 +1,15 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import {json} from 'body-parser';
-import * as OpenApiValidator from 'express-openapi-validator';
+import mongoose from 'mongoose';
 
 import { currentUserRouter } from './routes/current-user';
 import { signinRouter } from './routes/signin';
 import { signupRouter } from './routes/signup';
 import { signoutRouter } from './routes/signout';
-import { getRouteError } from './routes/routeErrors';
+
+import { errorHandler } from './middleware/error-handler';
+import { NotFoundError } from './errors/not-found-error';
 
 const app = express();
 
@@ -15,36 +17,29 @@ app.use(cors());
 
 app.use(json());
 
-app.use(
-    OpenApiValidator.middleware({
-      apiSpec: './src/openapi.yaml',
-      validateRequests: true, // (default)
-      validateResponses: true
-    }),
-);
-
 app.use(currentUserRouter);
 app.use(signinRouter);
 app.use(signupRouter);
 app.use(signoutRouter);
 
-// app.use(
-//   OpenApiValidator.middleware({
-//     apiSpec: './src/openapi.yaml',
-//     validateResponses: true
-//   }),
-// );
-
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.log(err)
-  // format error
-  console.log(getRouteError(req.originalUrl));
-  res.status(err.status || 500).json({
-    message: err.message,
-    errors: err.errors,
-  });
+app.all('*', async (req, res, next) => {
+    next(new NotFoundError());
 });
+
+app.use(errorHandler);
+
+const start = async () => {
+    try {
+        await mongoose.connect('mongodb://auth-mongo-srv:27017/auth');
+        console.log("connected to mongo db");
+    } catch (err) {
+        console.error(err)
+    }
+    
+};
 
 app.listen(3000, () => {
     console.log(`Listerning on port ${3000}!!!!!`)
 })
+
+start();
