@@ -1,22 +1,17 @@
-import buildServerClient from "../api/build-server-client";
-const getEmail = (user) => {
-    return user.email;
-}
 const LandingPage = (props) => {
+    // console.log(props.hi)
     return (
         <div>
             <h1>Landing Page</h1>
-            <p>{`user email: ${props.currentUser.email}`}</p>
+            <p>{props.currentUser ? `user email: ${props.currentUser.email}`: "You are not signed in"}</p>
         </div>
     )
 }
 
-export async function getServerSideProps(context) {
-    const { data } = await buildServerClient(context).get('/api/users/currentuser');
-    console.log(data);
-    return {
-        props: { currentUser: data.currentUser }, // will be passed to the page component as props
-    }
-}
+// export async function getServerSideProps(context) {
+//     return {
+//         props: { hi: "Hello from server" }, // will be passed to the page component as props
+//     }
+// }
 
 export default LandingPage;
