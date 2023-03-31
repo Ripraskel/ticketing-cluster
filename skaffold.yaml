@@ -9,15 +9,15 @@ build:
     push: false
   artifacts:
     - image: ripraskel/auth
-      context: auth
+      context: apps
       docker:
-        dockerfile: Dockerfile
+        dockerfile: ./auth/Dockerfile
       sync:
         manual:
           - src: 'src/**/*.ts'
             dest: .
     - image: ripraskel/client
-      context: client
+      context: apps/client
       docker:
         dockerfile: Dockerfile
       sync:

@@ -3,9 +3,7 @@ import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
 
 import { User } from '../models/user';
-import { BadRequestError } from '../errors/bad-request-error';
-import { DatabaseConnectionError } from '../errors/database-connection-error';
-import { validateRequest } from '../middleware/validate-request';
+import { BadRequestError, validateRequest } from '@ticketing/common';
 
 const router = express.Router();
 
@@ -16,8 +14,8 @@ router.post('/api/users/signup',
             .withMessage('Email must be valid'),
         body('password')
             .trim()
-            .isLength({ min: 4, max: 20})
-            .withMessage('Password must be between 4 and 20 characters long')
+            .isLength({ min: 5, max: 20})
+            .withMessage('Password must be between 5 and 20 characters long')
     ], 
     validateRequest,
     async (req: Request, res: Response, next: NextFunction) => {

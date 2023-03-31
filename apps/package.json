@@ -1,0 +1,22 @@
+{
+  "name": "ticketing",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build-all": "npm run build --workspaces --if-present",
+    "install-all": "npm install --workspaces --if-present",
+    "install-all-prod": "npm install --omit=dev --workspaces --if-present",
+    "lint-all": "npm run lint --workspaces --if-present",
+    "lint-fix-all": "npm run lint-fix --workspaces --if-present",
+    "test-all": "npm run test --workspaces --if-present"
+  },
+  "author": "",
+  "license": "ISC",
+  "workspaces": [
+    "common",
+    "auth"
+  ],
+  "dependencies": {
+    "typescript": "^5.0.3"
+  }
+}
