@@ -13,11 +13,11 @@ RUN npm install -w @ticketing/common
 COPY common common
 RUN npm run build -w @ticketing/common
 
-# Get auth
-COPY auth/package*.json ./auth/
-COPY auth/tsconfig*.json ./auth/
-RUN npm install -w @ticketing/auth
-COPY auth auth
-RUN npm run build -w @ticketing/auth
+# Get tickets
+COPY tickets/package*.json ./tickets/
+COPY tickets/tsconfig*.json ./tickets/
+RUN npm install -w @ticketing/tickets
+COPY tickets tickets
+RUN npm run build -w @ticketing/tickets
 
-CMD ["node", "/app/auth"]
+CMD ["node", "/app/tickets"]

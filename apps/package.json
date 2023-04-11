@@ -14,7 +14,8 @@
   "license": "ISC",
   "workspaces": [
     "common",
-    "auth"
+    "auth",
+    "tickets"
   ],
   "dependencies": {
     "typescript": "^5.0.3"

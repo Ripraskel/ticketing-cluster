@@ -2,6 +2,7 @@
     "files": [],
     "references": [
       { "path": "common" },
-      { "path": "auth" }
+      { "path": "auth" },
+      { "path": "tickets" }
     ]
   }

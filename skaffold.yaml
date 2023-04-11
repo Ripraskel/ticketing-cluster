@@ -16,6 +16,14 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: ripraskel/tickets
+      context: apps
+      docker:
+        dockerfile: ./tickets/Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .            
     - image: ripraskel/client
       context: apps/client
       docker:
