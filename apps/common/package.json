@@ -5,9 +5,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "del-cli --force dist && tsc",
     "lint": "eslint src",
-    "lint-fix": "eslint src --fix"
+    "lint-fix": "eslint src --fix",
+    "test": "del-cli --force dist && tsc"
   },
   "keywords": [],
   "author": "",

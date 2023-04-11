@@ -5,7 +5,7 @@
   "scripts": {
     "build-all": "npm run build --workspaces --if-present",
     "install-all": "npm install --workspaces --if-present",
-    "install-all-prod": "npm install --omit=dev --workspaces --if-present",
+    "install-all-prod": "npm prune --production && npm install --omit=dev --workspaces --if-present",
     "lint-all": "npm run lint --workspaces --if-present",
     "lint-fix-all": "npm run lint-fix --workspaces --if-present",
     "test-all": "npm run test --workspaces --if-present"
