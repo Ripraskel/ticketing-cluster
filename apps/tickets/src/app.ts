@@ -4,7 +4,10 @@ import cookieSession from 'cookie-session';
 
 
 import { currentUser, errorHandler, NotFoundError } from '@ticketing/common';
-import { createTicketRouter } from './routes/new';
+import { CreateTicketRouter } from './routes/new';
+import { ShowTicketRouter } from './routes/show';
+import { IndexTicketRouter } from './routes';
+import { UpdateTicketRouter } from './routes/update';
 
 const app = express();
 
@@ -18,7 +21,10 @@ app.use(cookieSession({
 app.use(currentUser);
 
 // Routes
-app.use(createTicketRouter);
+app.use(CreateTicketRouter);
+app.use(ShowTicketRouter);
+app.use(IndexTicketRouter);
+app.use(UpdateTicketRouter);
 
 app.all('*', async (req: Request, res: Response, next: NextFunction) => {
     next(new NotFoundError());

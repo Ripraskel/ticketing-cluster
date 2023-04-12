@@ -10,16 +10,20 @@ router.post('/api/tickets', requireAuth, [
     body('price').isFloat({ gt: 0 }).withMessage('Price must be greater than 0')
 ], validateRequest, 
 async (req: Request, res: Response, next: NextFunction) => {
-    const { title, price } = req.body;
-
-    const ticket = Ticket.build({
-        title,
-        price,
-        userId: req.currentUser!.id
-    })
-    await ticket.save();
-
-    res.status(201).send(ticket);
+    try {
+        const { title, price } = req.body;
+    
+        const ticket = Ticket.build({
+            title,
+            price,
+            userId: req.currentUser!.id
+        })
+        await ticket.save();
+    
+        res.status(201).send(ticket);
+    } catch (err) {
+        next(err);
+    }
 });
 
-export { router as createTicketRouter}
+export { router as CreateTicketRouter}

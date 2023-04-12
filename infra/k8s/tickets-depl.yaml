@@ -16,6 +16,8 @@ spec:
       - name: tickets
         image: ripraskel/tickets
         env:
+          - name: MONGO_URI
+            value: 'mongodb://tickets-mongo-srv:27017/ticket'
           - name: JWT_KEY
             valueFrom:
               secretKeyRef:

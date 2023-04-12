@@ -8,5 +8,7 @@ export const errorHandler = (err: CustomError, req: Request, res: Response, next
         });
     }
 
+    console.error(err);
+
     return res.status(500).send({ errors: [{ message: 'Unrecognised error thrown'}]})
 }

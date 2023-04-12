@@ -1,8 +1,10 @@
 import jwt from "jsonwebtoken";
+import { BuildTicketParams, Ticket, TicketDoc } from "../models/ticket";
+import mongoose from "mongoose";
 
-const getAuthCookie = (email: string = 'test@test.com') => {
+const getAuthCookie = (id: string = '1234', email: string = 'test@test.com') => {
     const payload = {
-        id: 's2342fsf',
+        id,
         email
     };
 
@@ -17,6 +19,21 @@ const getAuthCookie = (email: string = 'test@test.com') => {
     return `session=${base64}`
 }
 
+const createTicket = async (ticket: BuildTicketParams = {
+    title: 'Title',
+    price: 10,
+    userId: '1234'
+}): Promise<TicketDoc> => {
+    const newTicket = Ticket.build(ticket);
+    return newTicket.save();
+}
+
+const createMongooseId = () => {
+    return new mongoose.Types.ObjectId().toHexString();
+}
+
 export {
+    createMongooseId,
+    createTicket,
     getAuthCookie,
 }
