@@ -2,6 +2,7 @@ import request from "supertest";
 import { app } from "../../app";
 import { getAuthCookie } from "../../test/actions";
 import { Ticket } from "../../models/ticket";
+import { asyncApi } from "../../asyncApi";
 
 it('has route handler listening to /api/tickets for post requests', async () => {
     const response = await request(app)
@@ -66,4 +67,20 @@ it('creates a ticket with valid inputs', async () => {
     expect(tickets[0].price).toEqual(body.price);
 
     expect(response.status).toEqual(201);
-})
+});
+
+it('publishes an event when ticket is created', async () => {
+
+    const body = {
+        title: "Ticket",
+        price: 20
+    };
+
+    const response = await request(app)
+    .post('/api/tickets')
+    .set('Cookie', getAuthCookie())
+    .send(body)
+
+    expect(asyncApi.client.publish).toBeCalledTimes(1);
+
+});

@@ -2,6 +2,7 @@ import request from "supertest";
 import { app } from "../../app";
 import { createMongooseId, createTicket, getAuthCookie } from "../../test/actions";
 import { Ticket } from "../../models/ticket";
+import { asyncApi } from "../../asyncApi";
 
 it('returns 404 if ticket id does not exist', async () => {
     const id = createMongooseId();
@@ -114,4 +115,25 @@ it('successfully updates ticket when valid inputs provided', async () => {
     expect(response.body.title).toEqual(newTicketDetails.title);
     expect(response.body.price).toEqual(newTicketDetails.price);
     expect(response.status).toEqual(201);
+});
+
+it('successfully updates ticket when valid inputs provided', async () => {
+    const userId = '1234';
+    const ticket = await createTicket({
+        title: 'Ticket',
+        price: 20,
+        userId
+    })
+    
+    const newTicketDetails = {
+        title: 'New Ticket Title',
+        price: 10,
+    };
+
+    const response = await request(app)
+    .put(`/api/tickets/${ticket.id}`)
+    .set('Cookie', getAuthCookie(userId))
+    .send(newTicketDetails);
+
+    expect(asyncApi.client.publish).toBeCalledTimes(1);
 });

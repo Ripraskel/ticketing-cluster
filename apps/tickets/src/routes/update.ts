@@ -2,6 +2,8 @@ import express, { NextFunction, Request, Response } from 'express';
 import { body, param } from 'express-validator';
 import { NotAuthorisedError, NotFoundError, requireAuth, validateRequest } from '@ticketing/common';
 import { Ticket } from '../models/ticket';
+import { asyncApi } from '../asyncApi';
+import { TicketUpdatedPublisher } from '../events/ticket.publishers';
 
 const router = express.Router();
 
@@ -27,6 +29,12 @@ async (req: Request, res: Response, next: NextFunction) => {
 
         ticket.set({title, price});
         await ticket.save();
+        await new TicketUpdatedPublisher(asyncApi.client).publish({
+            id: ticket.id,
+            title: ticket.title,
+            price: ticket.price,
+            userId: ticket.userId
+        });
     
         res.status(201).send(ticket);
     } catch (err) {
