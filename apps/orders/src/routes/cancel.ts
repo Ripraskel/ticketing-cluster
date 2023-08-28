@@ -38,7 +38,7 @@ router.patch('/api/orders/cancel/:orderId', requireAuth,
                 ticketId: order.ticket.id
             });
 
-            res.status(204).send(order);
+            res.status(200).send(order);
         } catch(err) {
             next(err);
         }

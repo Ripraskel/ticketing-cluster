@@ -20,7 +20,7 @@ it('returns the cancelled order', async () => {
     .set('Cookie', getAuthCookie(userId))
     .send();
     
-    expect(response.status).toEqual(204);
+    expect(response.status).toEqual(200);
     expect(response.body.status).toEqual(OrderStatus.Cancelled);
 })
 
