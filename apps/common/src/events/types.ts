@@ -33,17 +33,19 @@ export interface OrderCreatedEvent {
         userId: string,
         status: OrderStatus,
         expiresAt: Date,
-        ticketId: string
+        ticket: {
+            id: string,
+            price: number
+        }
     }
 };
 
-export interface OrderUpdatedEvent {
-    subject: Subjects.OrderUpdated,
+export interface OrderCancelledEvent {
+    subject: Subjects.OrderCancelled,
     data: {
         id: string,
-        userId: string,
-        status: OrderStatus,
-        expiresAt: Date,
-        ticketId: string
+        ticket: {
+            id: string,
+        }
     }
 };

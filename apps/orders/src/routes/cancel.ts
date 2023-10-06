@@ -3,7 +3,7 @@ import { NotAuthorisedError, NotFoundError, OrderStatus, requireAuth, validateRe
 import { param } from 'express-validator';
 import { Order } from '../models/order';
 import { asyncApi } from '../asyncApi';
-import { OrderUpdatedPublisher } from '../events/order.publishers';
+import { OrderCancelledPublisher } from '../events/order.publishers';
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.patch('/api/orders/cancel/:orderId', requireAuth,
         try {
             const { orderId } = req.params;
 
-            const order = await Order.findById(orderId);
+            const order = await Order.findById(orderId).populate('ticket');
 
             if (!order) {
                 throw new NotFoundError();
@@ -30,12 +30,11 @@ router.patch('/api/orders/cancel/:orderId', requireAuth,
 
             await order.save();
 
-            await new OrderUpdatedPublisher(asyncApi.client).publish({
+            await new OrderCancelledPublisher(asyncApi.client).publish({
                 id: order.id,
-                userId: order.userId,
-                status: order.status,
-                expiresAt: order.expiresAt,
-                ticketId: order.ticket.id
+                ticket: {
+                    id: order.ticket.id
+                }
             });
 
             res.status(200).send(order);

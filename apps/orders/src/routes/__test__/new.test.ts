@@ -1,9 +1,9 @@
 import request from "supertest";
 import { app } from "../../app";
 import { createMongooseId, createOrder, createTicket, getAuthCookie } from "../../test/actions";
-import { Ticket } from "../../models/ticket";
-import { Order, OrderStatus } from "../../models/order";
+import { OrderStatus } from "../../models/order";
 import { asyncApi } from "../../asyncApi";
+import { Subjects } from "@ticketing/common";
 
 it('has route handler listening to /api/orders for post requests', async () => {
     const response = await request(app)
@@ -80,7 +80,15 @@ it('publishes an event when order is reserved', async () => {
         title: 'Ticket',
         price: 20,
     });
-    
+
+    let publishedData;
+    // Override Publish mock to get hold of Data for later verification
+    jest.spyOn(asyncApi.client, 'publish').mockImplementationOnce((subject, data, callback) => {  
+        data ? publishedData = JSON.parse(data.toString()) : "";
+        callback && callback(undefined, "GUID");
+        return ""
+    });
+
     const response = await request(app)
     .post('/api/orders')
     .set('Cookie', getAuthCookie())
@@ -88,5 +96,7 @@ it('publishes an event when order is reserved', async () => {
 
     expect(response.status).toEqual(201)
 
+    expect(publishedData).toEqual(expect.objectContaining({ ticket: expect.objectContaining({id: ticket.id}) }));
     expect(asyncApi.client.publish).toBeCalledTimes(1);
+    expect(asyncApi.client.publish).toBeCalledWith(Subjects.OrderCreated, expect.any(String), expect.any(Function) );
 });

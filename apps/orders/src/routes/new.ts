@@ -46,7 +46,10 @@ async (req: Request, res: Response, next: NextFunction) => {
             userId: order.userId,
             status: order.status,
             expiresAt: order.expiresAt,
-            ticketId: order.ticket.id
+            ticket: {
+                id: order.ticket.id,
+                price: order.ticket.price
+            }
         });
     
         res.status(201).send(order);
