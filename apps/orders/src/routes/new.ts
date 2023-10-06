@@ -45,7 +45,7 @@ async (req: Request, res: Response, next: NextFunction) => {
             id: order.id,
             userId: order.userId,
             status: order.status,
-            expiresAt: order.expiresAt,
+            expiresAt: order.expiresAt.toISOString(),
             ticket: {
                 id: order.ticket.id,
                 price: order.ticket.price
