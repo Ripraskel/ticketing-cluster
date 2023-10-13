@@ -42,8 +42,10 @@ it('returns an error if the ticket does not exist', async () => {
 
 it('returns an error if the ticket is already reserved', async () => {
     const ticket = await createTicket({
+        id: createMongooseId(),
         title: 'Ticket',
         price: 20,
+        version: 0
     });
 
     const existingOrder = await createOrder({
@@ -63,8 +65,10 @@ it('returns an error if the ticket is already reserved', async () => {
 
 it('reserves a ticket', async () => {
     const ticket = await createTicket({
+        id: createMongooseId(),
         title: 'Ticket',
         price: 20,
+        version: 0
     });
     
     const response = await request(app)
@@ -77,8 +81,10 @@ it('reserves a ticket', async () => {
 
 it('publishes an event when order is reserved', async () => {
     const ticket = await createTicket({
+        id: createMongooseId(),
         title: 'Ticket',
         price: 20,
+        version: 0
     });
 
     let publishedData;

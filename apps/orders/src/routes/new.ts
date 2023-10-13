@@ -43,6 +43,7 @@ async (req: Request, res: Response, next: NextFunction) => {
 
         await new OrderCreatedPublisher(asyncApi.client).publish({
             id: order.id,
+            version: order.version,
             userId: order.userId,
             status: order.status,
             expiresAt: order.expiresAt.toISOString(),

@@ -21,8 +21,10 @@ const getAuthCookie = (id: string = '1234', email: string = 'test@test.com') => 
 }
 
 const createTicket = async (ticket: BuildTicketParams = {
+    id: createMongooseId(),
     title: 'Title',
     price: 10,
+    version: 0
 }): Promise<TicketDoc> => {
     const newTicket = Ticket.build(ticket);
     return newTicket.save();

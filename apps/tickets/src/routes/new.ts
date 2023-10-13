@@ -23,6 +23,7 @@ async (req: Request, res: Response, next: NextFunction) => {
         await ticket.save();
         await new TicketCreatedPublisher(asyncApi.client).publish({
             id: ticket.id,
+            version: ticket.version,
             title: ticket.title,
             price: ticket.price,
             userId: ticket.userId

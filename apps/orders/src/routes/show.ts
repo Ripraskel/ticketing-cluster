@@ -1,8 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express';
-import { Ticket } from '../models/ticket';
 import { param } from 'express-validator';
-import { BadRequestError, NotAuthorisedError, NotFoundError, requireAuth, validateRequest } from '@ticketing/common';
-import mongoose from 'mongoose';
+import { NotAuthorisedError, NotFoundError, requireAuth, validateRequest } from '@ticketing/common';
 import { Order } from '../models/order';
 
 const router = express.Router();

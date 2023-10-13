@@ -14,7 +14,7 @@ interface BuildOrderParams {
 
 // interface for Order from Mongoose
 interface OrderDoc extends mongoose.Document, BuildOrderParams {
-    // createdAt?: Date
+    version: number
 }
 // Order Model interface
 interface OrderModel extends mongoose.Model<OrderDoc> {
@@ -40,10 +40,11 @@ const OrderSchema = new mongoose.Schema({
         ref: 'Ticket'
     }
 }, {
+    optimisticConcurrency: true,
+    versionKey: 'version',
     toJSON: {
         transform(doc, ret) {
             ret.id = ret._id
-            delete ret.__v;
             delete ret._id
         },
     }
