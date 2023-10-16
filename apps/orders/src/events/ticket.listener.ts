@@ -1,7 +1,6 @@
 import { Listener, Subjects, TicketCreatedEvent, TicketUpdatedEvent } from "@ticketing/common";
 import { Message } from "node-nats-streaming";
 import { Ticket } from "../models/ticket";
-import { version } from "mongoose";
 
 const queueGroupName = 'orders-service';
 
