@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
 import { app } from './app';
 import { asyncApi } from './asyncApi';
-import { TicketCreatedListener } from './events/ticketCreated.listener';
-import { TicketUpdatedListener } from './events/ticketUpdated.listener';
+import { TicketCreatedListener, TicketUpdatedListener } from './events/ticket.listener';
 
 const start = async () => {
     if (!process.env.JWT_KEY) {
