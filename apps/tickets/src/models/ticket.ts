@@ -11,6 +11,7 @@ interface BuildTicketParams {
 interface TicketDoc extends mongoose.Document, BuildTicketParams {
     createdAt?: Date
     version: number
+    orderId?: string
 }
 
 // Ticket Model interface
@@ -33,6 +34,9 @@ const TicketSchema = new mongoose.Schema({
     userId: {
         type: String,
         required: true
+    },
+    orderId: {
+        type: String,
     }
 }, {
     optimisticConcurrency: true,
