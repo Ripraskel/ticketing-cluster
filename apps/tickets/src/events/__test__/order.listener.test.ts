@@ -2,8 +2,8 @@ import { Message } from "node-nats-streaming"
 import { asyncApi } from "../../asyncApi"
 import { createMongooseId } from "../../test/actions"
 import { Ticket } from "../../models/ticket"
-import { OrderCreatedListener } from "../order.listener"
-import { OrderCreatedEvent, OrderStatus, Subjects } from "@ticketing/common"
+import { OrderCancelledListener, OrderCreatedListener } from "../order.listener"
+import { OrderCancelledEvent, OrderCreatedEvent, OrderStatus, Subjects } from "@ticketing/common"
 
 describe("Test Ticket Listeners", () => {
     describe("OrderCreateListener Class", () => {
@@ -85,6 +85,81 @@ describe("Test Ticket Listeners", () => {
                 const {listener, OrderCreatedEventData, mockMessage} = await onMessageSetup();
                 await expect(listener.onMessage(
                     {...OrderCreatedEventData, ticket: { id: createMongooseId(), price: 20 }},
+                    mockMessage
+                )).rejects.toThrowError("Received order for non-existant ticket");
+                
+                expect(mockMessage.ack).not.toBeCalled();
+            });
+        });
+    });
+
+    describe("OrderCancelledListener Class", () => {
+        describe("onMessage Function", () => {
+            const onMessageSetup = async () => {
+                const listener = new OrderCancelledListener(asyncApi.client);
+                const mockMessage = {
+                    ack: jest.fn()
+                } as unknown as Message;
+
+                const ticket = Ticket.build({
+                    title: "Taylors",
+                    price: 30,
+                    userId: createMongooseId(),
+                });
+                await ticket.save();
+                ticket.set({orderId: createMongooseId()});
+                await ticket.save();
+    
+                const OrderCancelledEventData: OrderCancelledEvent['data'] = {
+                    id: ticket.orderId!,
+                    version: 0,
+                    ticket: {
+                        id: ticket.id,
+                    }
+                }; 
+    
+                return {
+                    listener,
+                    mockMessage,
+                    OrderCancelledEventData
+                }
+            };
+    
+            it("Removes orderId from ticket", async () => {
+                const {listener, OrderCancelledEventData, mockMessage} = await onMessageSetup();
+                await listener.onMessage(OrderCancelledEventData, mockMessage);
+    
+                const ticket = await Ticket.findById(OrderCancelledEventData.ticket.id);
+    
+                expect.assertions(1);
+                expect(ticket?.orderId).toEqual(undefined);
+            });
+    
+            it("Publishes ticket update", async () => {
+                const {listener, OrderCancelledEventData, mockMessage} = await onMessageSetup();
+                await listener.onMessage(OrderCancelledEventData, mockMessage);
+
+                await Ticket.findById(OrderCancelledEventData.ticket.id);
+
+                // Get arguments the publisher was called with
+                const [eventSubject, ticketStringified, callback] = (asyncApi.client.publish as jest.Mock).mock.lastCall;
+                
+                // Check the correct event was published
+                expect(JSON.parse(ticketStringified).id).toEqual(OrderCancelledEventData.ticket.id);
+                expect(JSON.parse(ticketStringified).orderId).toEqual(undefined);
+                expect(eventSubject).toEqual(Subjects.TicketUpdated);
+            });
+
+            it("Acks when save is successful", async () => {
+                const {listener, OrderCancelledEventData, mockMessage} = await onMessageSetup();
+                await listener.onMessage(OrderCancelledEventData, mockMessage);
+                expect(mockMessage.ack).toBeCalled();
+            });
+
+            it("Throws when ticket ordered doesn't exist in DB and does not call Ack", async () => {
+                const {listener, OrderCancelledEventData, mockMessage} = await onMessageSetup();
+                await expect(listener.onMessage(
+                    {...OrderCancelledEventData, ticket: { id: createMongooseId() }},
                     mockMessage
                 )).rejects.toThrowError("Received order for non-existant ticket");
                 
