@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { app } from './app';
 import { asyncApi } from './asyncApi';
+import { OrderCancelledListener, OrderCreatedListener } from './events/order.listener';
 
 const start = async () => {
     if (!process.env.JWT_KEY) {
@@ -36,6 +37,9 @@ const start = async () => {
     } catch (err) {
         console.error(err)
     }
+    
+    new OrderCreatedListener(asyncApi.client).listen();
+    new OrderCancelledListener(asyncApi.client).listen();
     
     app.listen(3000, () => {
         console.log(`Listerning on port ${3000}!!!!!`)

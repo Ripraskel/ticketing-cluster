@@ -40,6 +40,7 @@ const start = async () => {
     
     new TicketCreatedListener(asyncApi.client).listen();
     new TicketUpdatedListener(asyncApi.client).listen();
+    
     app.listen(3000, () => {
         console.log(`Listerning on port ${3000}!!!!!`)
     })
