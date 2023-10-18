@@ -3,6 +3,7 @@ import { asyncApi } from "../../asyncApi"
 import { createMongooseId } from "../../test/actions"
 import { Ticket } from "../../models/ticket"
 import { TicketCreatedListener, TicketUpdatedListener } from "../ticket.listener"
+import { TicketCreatedEvent, TicketUpdatedEvent } from "@ticketing/common"
 
 describe("Test Ticket Listeners", () => {
     describe("TicketCreateListener Class", () => {
@@ -13,7 +14,7 @@ describe("Test Ticket Listeners", () => {
                     ack: jest.fn()
                 } as unknown as Message;
     
-                const fakeTicket = {
+                const ticketCreatedEventData: TicketCreatedEvent['data'] = {
                     id: createMongooseId(),
                     version: 0,
                     title: "Taylors",
@@ -24,31 +25,31 @@ describe("Test Ticket Listeners", () => {
                 return {
                     listener,
                     mockMessage,
-                    fakeTicket
+                    ticketCreatedEventData
                 }
             };
     
             it("Creates new ticket in the database", async () => {
-                const {listener, fakeTicket, mockMessage} = onMessageSetup();
-                await listener.onMessage(fakeTicket, mockMessage);
+                const {listener, ticketCreatedEventData, mockMessage} = onMessageSetup();
+                await listener.onMessage(ticketCreatedEventData, mockMessage);
     
                 const tickets = await Ticket.find({});
     
                 expect.assertions(2);
-                expect(tickets[0].id).toEqual(fakeTicket.id);
+                expect(tickets[0].id).toEqual(ticketCreatedEventData.id);
                 expect(tickets.length).toEqual(1);
             });
     
             it("Acks when save is successful", async () => {
-                const {listener, fakeTicket, mockMessage} = onMessageSetup();
-                await listener.onMessage(fakeTicket, mockMessage);
+                const {listener, ticketCreatedEventData, mockMessage} = onMessageSetup();
+                await listener.onMessage(ticketCreatedEventData, mockMessage);
                 expect(mockMessage.ack).toBeCalled();
             });
     
             it("Throws when save fails and does not call Ack", async () => {
-                const {listener, fakeTicket, mockMessage} = onMessageSetup();
+                const {listener, ticketCreatedEventData, mockMessage} = onMessageSetup();
                 await expect(listener.onMessage(
-                    {...fakeTicket, price: "INVALID" as unknown as number},
+                    {...ticketCreatedEventData, price: "INVALID" as unknown as number},
                     mockMessage
                 )).rejects.toThrowError();
     
@@ -64,7 +65,7 @@ describe("Test Ticket Listeners", () => {
                     ack: jest.fn()
                 } as unknown as Message;
     
-                const fakeTicket = {
+                const ticketUpdatedEventData: TicketUpdatedEvent['data']= {
                     id: createMongooseId(),
                     version: 0,
                     title: "Taylors",
@@ -72,52 +73,52 @@ describe("Test Ticket Listeners", () => {
                     userId: createMongooseId()
                 }
                 
-                const newTicket = Ticket.build(fakeTicket); 
+                const newTicket = Ticket.build(ticketUpdatedEventData); 
                 await newTicket.save();
     
                 return {
                     listener,
                     mockMessage,
-                    fakeTicket
+                    ticketUpdatedEventData
                 }
             };
     
             it("Updates ticket if version is 1 ahead of one currently saved in the database", async () => {
-                const {listener, fakeTicket, mockMessage} = await onMessageSetup();
+                const {listener, ticketUpdatedEventData, mockMessage} = await onMessageSetup();
                 
-                fakeTicket.version++;
-                await listener.onMessage(fakeTicket, mockMessage);
+                ticketUpdatedEventData.version++;
+                await listener.onMessage(ticketUpdatedEventData, mockMessage);
     
                 const tickets = await Ticket.find({});
     
                 expect.assertions(2);
-                expect(tickets[0].id).toEqual(fakeTicket.id);
+                expect(tickets[0].id).toEqual(ticketUpdatedEventData.id);
                 expect(tickets.length).toEqual(1);
             });
     
             it("Throws when version of new ticket is not 1 ahead", async () => {
-                const {listener, fakeTicket, mockMessage} = await onMessageSetup();
+                const {listener, ticketUpdatedEventData, mockMessage} = await onMessageSetup();
     
-                fakeTicket.version = 2; // set version 1 to many ahead
+                ticketUpdatedEventData.version = 2; // set version 1 to many ahead
                 
                 await expect(listener.onMessage(
-                    fakeTicket,
+                    ticketUpdatedEventData,
                     mockMessage
                 )).rejects.toThrowError();
             })
     
             it("Acks when save is successful", async () => {
-                const {listener, fakeTicket, mockMessage} = await onMessageSetup();
+                const {listener, ticketUpdatedEventData, mockMessage} = await onMessageSetup();
     
-                fakeTicket.version++;
-                await listener.onMessage(fakeTicket, mockMessage);
+                ticketUpdatedEventData.version++;
+                await listener.onMessage(ticketUpdatedEventData, mockMessage);
                 expect(mockMessage.ack).toBeCalled();
             });
     
             it("Throws when save fails and does not call Ack", async () => {
-                const {listener, fakeTicket, mockMessage} = await onMessageSetup();
+                const {listener, ticketUpdatedEventData, mockMessage} = await onMessageSetup();
                 await expect(listener.onMessage(
-                    {...fakeTicket, price: "INVALID" as unknown as number},
+                    {...ticketUpdatedEventData, price: "INVALID" as unknown as number},
                     mockMessage
                 )).rejects.toThrowError();
                 

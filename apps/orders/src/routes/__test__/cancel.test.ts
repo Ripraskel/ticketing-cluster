@@ -51,14 +51,6 @@ it('publishes an event when order is cancelled', async () => {
 
     const ticket = await createTicket();
 
-    let publishedData;
-    // Override Publish mock to get hold of Data for later verification
-    jest.spyOn(asyncApi.client, 'publish').mockImplementationOnce((subject, data, callback) => {  
-        data ? publishedData = JSON.parse(data.toString()) : "";
-        callback && callback(undefined, "GUID");
-        return ""
-    });
-
     const order = await createOrder({
         userId: userId,
         status: OrderStatus.Created,
@@ -73,7 +65,11 @@ it('publishes an event when order is cancelled', async () => {
     
     expect(response.status).toEqual(200);
 
-    expect(publishedData).toEqual(expect.objectContaining({ ticket: expect.objectContaining({id: ticket.id}) }));
-    expect(asyncApi.client.publish).toBeCalledTimes(1);
-    expect(asyncApi.client.publish).toBeCalledWith(Subjects.OrderCancelled, expect.any(String), expect.any(Function) );
+    // Get arguments the publisher was called with
+    const [eventSubject, orderStringified, callback] = (asyncApi.client.publish as jest.Mock).mock.lastCall;
+
+    // Check the correct event was published
+    expect(JSON.parse(orderStringified).id).toEqual(response.body.id);
+    expect(JSON.parse(orderStringified).ticket.id).toEqual(ticket.id);
+    expect(eventSubject).toEqual(Subjects.OrderCancelled);
 });

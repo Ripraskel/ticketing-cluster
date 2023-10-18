@@ -87,22 +87,20 @@ it('publishes an event when order is reserved', async () => {
         version: 0
     });
 
-    let publishedData;
-    // Override Publish mock to get hold of Data for later verification
-    jest.spyOn(asyncApi.client, 'publish').mockImplementationOnce((subject, data, callback) => {  
-        data ? publishedData = JSON.parse(data.toString()) : "";
-        callback && callback(undefined, "GUID");
-        return ""
-    });
-
     const response = await request(app)
     .post('/api/orders')
     .set('Cookie', getAuthCookie())
     .send({ ticketId: ticket.id });
 
+    expect.assertions(4);
     expect(response.status).toEqual(201)
 
-    expect(publishedData).toEqual(expect.objectContaining({ ticket: expect.objectContaining({id: ticket.id}) }));
-    expect(asyncApi.client.publish).toBeCalledTimes(1);
-    expect(asyncApi.client.publish).toBeCalledWith(Subjects.OrderCreated, expect.any(String), expect.any(Function) );
+    // Get arguments the publisher was called with
+    const [eventSubject, orderStringiFied, callback] = (asyncApi.client.publish as jest.Mock).mock.lastCall;
+    
+    // Check the correct event was published
+    expect(JSON.parse(orderStringiFied).id).toEqual(response.body.id);
+    expect(JSON.parse(orderStringiFied).ticket.id).toEqual(ticket.id);
+    expect(eventSubject).toEqual(Subjects.OrderCreated);
+    
 });
