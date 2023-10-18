@@ -34,11 +34,11 @@ it('returns 401 if user is not authenticated', async () => {
 });
 
 it('returns 401 if user does not own the ticket', async () => {
-    const userId = '1234';
+    const userId = createMongooseId();
     const ticket = await createTicket({
         title: 'Ticket',
         price: 20,
-        userId: '4321' // Different from userId
+        userId: createMongooseId() // Different from userId
     })
     
     const response = await request(app)
@@ -88,6 +88,25 @@ it('returns 400 when ticket id is not valid', async () => {
     expect(response.status).toEqual(400);
 });
 
+it('returns 400 if the ticket is reserved', async () => {
+    const ticket = await createTicket({
+        title: 'Ticket',
+        price: 20,
+        userId: createMongooseId() // Different from userId
+    })
+    ticket.set({ orderId: createMongooseId() })
+    await ticket.save();
+    
+    const response = await request(app)
+    .put(`/api/tickets/${ticket.id}`)
+    .set('Cookie', getAuthCookie(ticket.userId))
+    .send({
+        price: 10,
+    });
+
+    expect(response.status).toEqual(400);
+});
+
 it('successfully updates ticket when valid inputs provided', async () => {
     const userId = '1234';
     const ticket = await createTicket({
@@ -117,7 +136,7 @@ it('successfully updates ticket when valid inputs provided', async () => {
     expect(response.status).toEqual(201);
 });
 
-it('successfully updates ticket when valid inputs provided', async () => {
+it('Publishes ticket updated event when successfully updated', async () => {
     const userId = '1234';
     const ticket = await createTicket({
         title: 'Ticket',

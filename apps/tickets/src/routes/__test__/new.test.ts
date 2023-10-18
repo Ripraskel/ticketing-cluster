@@ -82,5 +82,4 @@ it('publishes an event when ticket is created', async () => {
     .send(body)
 
     expect(asyncApi.client.publish).toBeCalledTimes(1);
-
 });

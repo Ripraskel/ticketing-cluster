@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { body, param } from 'express-validator';
-import { NotAuthorisedError, NotFoundError, requireAuth, validateRequest } from '@ticketing/common';
+import { BadRequestError, NotAuthorisedError, NotFoundError, requireAuth, validateRequest } from '@ticketing/common';
 import { Ticket } from '../models/ticket';
 import { asyncApi } from '../asyncApi';
 import { TicketUpdatedPublisher } from '../events/ticket.publishers';
@@ -25,6 +25,10 @@ async (req: Request, res: Response, next: NextFunction) => {
 
         if (ticket.userId !== req.currentUser?.id) {
             return next(new NotAuthorisedError()); 
+        }
+        
+        if (ticket.orderId) {
+            return next(new BadRequestError("Cannot update reserved ticket"));
         }
 
         ticket.set({title, price});
