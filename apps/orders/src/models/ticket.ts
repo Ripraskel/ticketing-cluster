@@ -48,9 +48,15 @@ const TicketSchema = new mongoose.Schema({
         required: true,
         min: 0
     },
+    // Need explicit version field so that if nothing else changes when an update comes in the version will.
+    // i.e Mongo won't update the version automatically if the ticket has no changes despite save() being called
+    version: {
+        type: Number,
+        required: true,
+        min: 0
+    },
 }, {
     optimisticConcurrency: true,
-    versionKey: 'version',
     toJSON: {
         transform(doc, ret) {
             ret.id = ret._id

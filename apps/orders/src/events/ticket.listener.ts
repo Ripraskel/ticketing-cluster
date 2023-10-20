@@ -36,7 +36,8 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
             throw new Error('Ticket not found');
         }
 
-        ticket.set({ title, price });
+        // Version needs to be updated as Mongo won't do it if no other properties change.
+        ticket.set({ title, price, version });
         await ticket.save();
 
         msg.ack();
