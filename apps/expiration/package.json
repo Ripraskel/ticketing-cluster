@@ -1,0 +1,41 @@
+{
+  "name": "@ticketing/expiration",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "ts-node-dev src/index.ts",
+    "build": "tsc --project tsconfig.build.json",
+    "lint": "eslint src",
+    "lint-fix": "eslint src --fix",
+    "test": "jest --runInBand --no-cache"
+  },
+  "jest": {
+    "maxConcurrency": 1,
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/"
+    ],
+    "setupFilesAfterEnv": [
+      "./src/test/setup.ts"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ticketing/common": "^1.0.0",
+    "bull": "^4.11.4",
+    "node-nats-streaming": "^0.3.2"
+  },
+  "devDependencies": {
+    "@types/bull": "^4.10.0",
+    "@types/jest": "^29.5.0",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.0.5",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.9.4"
+  }
+}

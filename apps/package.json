@@ -16,7 +16,8 @@
     "common",
     "auth",
     "orders",
-    "tickets"
+    "tickets",
+    "expiration"
   ],
   "dependencies": {
     "typescript": "^5.0.3"
