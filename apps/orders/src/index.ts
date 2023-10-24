@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { app } from './app';
 import { asyncApi } from './asyncApi';
 import { TicketCreatedListener, TicketUpdatedListener } from './events/ticket.listener';
+import { OrderExpiredListener } from './events/order.listener';
 
 const start = async () => {
     if (!process.env.JWT_KEY) {
@@ -40,6 +41,7 @@ const start = async () => {
     
     new TicketCreatedListener(asyncApi.client).listen();
     new TicketUpdatedListener(asyncApi.client).listen();
+    new OrderExpiredListener(asyncApi.client).listen();
     
     app.listen(3000, () => {
         console.log(`Listerning on port ${3000}!!!!!`)

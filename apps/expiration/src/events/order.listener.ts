@@ -1,6 +1,6 @@
 import { Listener, Subjects, OrderCreatedEvent } from "@ticketing/common";
 import { Message } from "node-nats-streaming";
-import { expirationQueue } from "../queues/expiration-queue";
+import { expirationQueue } from "../queues/order.expirationQueue";
 
 const queueGroupName = 'expiration-service';
 

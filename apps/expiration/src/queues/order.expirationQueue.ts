@@ -1,4 +1,6 @@
 import Queue from "bull";
+import { asyncApi } from "../asyncApi";
+import { OrderExpiredPublisher } from "../events/order.publisher";
 
 interface IPayload {
     orderId: string
@@ -11,7 +13,9 @@ const expirationQueue = new Queue<IPayload>('order-expiration', {
 });
 
 expirationQueue.process(async (job) => {
-    console.log("I want to publish expiration:complete for orderId", job.data.orderId)
+    await new OrderExpiredPublisher(asyncApi.client).publish({
+        id: job.data.orderId,
+    });
 });
 
 export {

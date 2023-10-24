@@ -24,13 +24,12 @@ const start = async () => {
         });
         process.on('SIGNINT', () => asyncApi.client.close());
         process.on('SIGTERM', () => asyncApi.client.close());
-
-        new OrderCreatedListener(asyncApi.client).listen();
-
+  
     } catch (err) {
         console.error(err)
     }
+    
+    new OrderCreatedListener(asyncApi.client).listen();
 };
-
 
 start();
