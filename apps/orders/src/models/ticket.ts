@@ -5,12 +5,12 @@ import { Order, OrderStatus } from "./order";
 interface ITicket {
     title: string
     price: number
+    version: number
 }
 
 // Build Ticket fields
 interface BuildTicketParams extends ITicket {
     id: string
-    version: number
 };
 
 // interface for Ticket from Mongoose

@@ -64,18 +64,23 @@ describe("Test Ticket Listeners", () => {
                 const mockMessage = {
                     ack: jest.fn()
                 } as unknown as Message;
-    
-                const ticketUpdatedEventData: TicketUpdatedEvent['data']= {
+                  
+                const ticket = Ticket.build({
                     id: createMongooseId(),
                     version: 0,
                     title: "Taylors",
                     price: 30,
+                }); 
+                await ticket.save();
+    
+                const ticketUpdatedEventData: TicketUpdatedEvent['data']= {
+                    id: ticket.id,
+                    version: ticket.version + 1,
+                    title: ticket.title,
+                    price: 300,
                     userId: createMongooseId()
                 }
-                
-                const newTicket = Ticket.build(ticketUpdatedEventData); 
-                await newTicket.save();
-    
+
                 return {
                     listener,
                     mockMessage,
@@ -86,7 +91,6 @@ describe("Test Ticket Listeners", () => {
             it("Updates ticket if version is 1 ahead of one currently saved in the database", async () => {
                 const {listener, ticketUpdatedEventData, mockMessage} = await onMessageSetup();
                 
-                ticketUpdatedEventData.version++;
                 await listener.onMessage(ticketUpdatedEventData, mockMessage);
     
                 const tickets = await Ticket.find({});
@@ -110,7 +114,6 @@ describe("Test Ticket Listeners", () => {
             it("Acks when save is successful", async () => {
                 const {listener, ticketUpdatedEventData, mockMessage} = await onMessageSetup();
     
-                ticketUpdatedEventData.version++;
                 await listener.onMessage(ticketUpdatedEventData, mockMessage);
                 expect(mockMessage.ack).toBeCalled();
             });
