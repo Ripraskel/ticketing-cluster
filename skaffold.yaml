@@ -48,3 +48,11 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .     
+    - image: ripraskel/payments
+      context: apps
+      docker:
+        dockerfile: ./payments/Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .  

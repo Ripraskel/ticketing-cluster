@@ -17,7 +17,8 @@
     "auth",
     "orders",
     "tickets",
-    "expiration"
+    "expiration",
+    "payments"
   ],
   "dependencies": {
     "typescript": "^5.0.3"

@@ -3,6 +3,9 @@
     "references": [
       { "path": "common" },
       { "path": "auth" },
-      { "path": "tickets" }
+      { "path": "tickets" },
+      { "path": "orders" },
+      { "path": "expiration" },
+      { "path": "payments" }
     ]
   }
