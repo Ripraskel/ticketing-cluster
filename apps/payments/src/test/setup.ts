@@ -2,6 +2,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 
 jest.mock('../asyncApi');
+jest.mock('../stripe');
 
 let mongo: MongoMemoryServer;
 beforeAll(async () => {

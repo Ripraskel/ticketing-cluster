@@ -51,6 +51,22 @@ describe("Test Ticket Listeners", () => {
                 expect.assertions(1);
                 expect(order?.status).toEqual(OrderStatus.Cancelled);
             });
+
+            it("Doesn't do anything but call ack if order is complete", async () => {
+                const {listener, OrderExpiredEventData, mockMessage} = await onMessageSetup();
+                const order = await Order.findById(OrderExpiredEventData.id);
+                order?.set({ status: OrderStatus.Complete });
+                await order?.save();
+
+                await listener.onMessage(OrderExpiredEventData, mockMessage);
+    
+                const orderAfterEvent = await Order.findById(OrderExpiredEventData.id);
+                
+                expect.assertions(3);
+                expect(orderAfterEvent?.status).toEqual(OrderStatus.Complete);
+                expect(orderAfterEvent?.version).toEqual(order?.version);
+                expect(mockMessage.ack).toBeCalled();
+            });
     
             it("Publishes order cancelled event", async () => {
                 const {listener, OrderExpiredEventData, mockMessage} = await onMessageSetup();
