@@ -1,4 +1,5 @@
-import Link from 'next/link'
+import Link from 'next/link';
+
 export default ({currentUser}) => {
     const authLinks = [
         !currentUser && { label: 'Sign Up', href: '/auth/signup'},
@@ -8,7 +9,7 @@ export default ({currentUser}) => {
         .filter(authLinks => authLinks)
         .map(({label, href}) => {
             return (
-                <li className="nav-item">
+                <li className="nav-item" key={label}>
                     <Link href={href} className="nav-link" >
                         {label}
                     </Link>
