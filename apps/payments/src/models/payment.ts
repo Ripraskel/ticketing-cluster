@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 interface BuildPaymentParams {
     orderId: string
     stripeId: string
+    complete: boolean
 };
 
 // interface for Order from Mongoose
@@ -24,6 +25,10 @@ const PaymentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    complete: {
+        type: Boolean,
+        required: true
+    }
 
 }, {
     optimisticConcurrency: true,

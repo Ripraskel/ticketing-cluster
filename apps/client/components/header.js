@@ -1,9 +1,12 @@
 import Link from 'next/link';
 
 export default ({currentUser}) => {
+    console.log(currentUser)
     const authLinks = [
         !currentUser && { label: 'Sign Up', href: '/auth/signup'},
         !currentUser && { label: 'Sign In', href: '/auth/signin'},
+        currentUser && { label: 'Sell Ticket', href: '/tickets/new'},
+        currentUser && { label: 'My Orders', href: '/orders'},
         currentUser && { label: 'Sign Out', href: '/auth/signout'}
     ]
         .filter(authLinks => authLinks)

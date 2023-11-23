@@ -12,7 +12,6 @@ const newTicket = () => {
             title,
             price
         }, 
-        // onSuccess: (ticket) => Router.push(`/tickets/${ticket.id}`)
         onSuccess: () => Router.push('/')
     });
 
