@@ -15,42 +15,39 @@ router.post('/api/payments/complete', requireAuth, [
     async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { paymentId } = req.body;
-            console.log("paymentId complete", paymentId )
 
-            // Find the order the user is trying to order in the database
+            // Find the payment intent in the database
             const payment = await Payment.findById(paymentId);
             if (!payment) {
                 throw new NotFoundError();
             }
+            // Find order associated with the payment intent. This should never fail.
             const order = await Order.findById(payment.orderId);
 
-            if (!order) {
-                throw new NotFoundError();
-            }
-            if (order.userId !== req.currentUser!.id) {
+            if (order?.userId !== req.currentUser!.id) {
                 throw new NotAuthorisedError();
-            }
-            if (order.status === OrderStatus.Cancelled) {
-                throw new BadRequestError("Can't pay for cancelled order")
             }
 
             // confirm with Stripe that payment is complete
+            // ideally would set up webhook with Stripe for this but that would require a public domain.
             const paymentIntent = await stripe.paymentIntents.retrieve(payment.stripeId)
+            
+            // As no garantees due async nature only log if we could confirm for now
             if (paymentIntent && paymentIntent.status === 'succeeded') {
                 console.log(paymentIntent.status)
-                payment.complete = true;
-                await payment.save();
-
-                await new PaymentCreatedPublisher(asyncApi.client).publish({
-                    id: payment.id,
-                    orderId: payment.orderId,
-                    stripeId: payment.stripeId
-                });
             } else {
                 // Let the order expiration handle failures
-                // ideally would set up webhook with Stripe for this but that would require a public domain.
                 console.log(paymentIntent.status)
             }
+
+            // update payment record and publish event regardless payment intent status
+            payment.complete = true;
+            await payment.save();
+            await new PaymentCreatedPublisher(asyncApi.client).publish({
+                id: payment.id,
+                orderId: payment.orderId,
+                stripeId: payment.stripeId
+            });
 
             res.send({
                 orderId: order.id,

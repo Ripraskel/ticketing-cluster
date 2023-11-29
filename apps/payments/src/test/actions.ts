@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { BuildOrderParams, Order, OrderDoc, OrderStatus } from "../models/order";
+import { BuildPaymentParams, Payment, PaymentDoc } from "../models/payment";
 
 const getAuthCookie = (id: string = '1234', email: string = 'test@test.com') => {
     const payload = {
@@ -25,6 +26,11 @@ const createOrder = async (order: BuildOrderParams): Promise<OrderDoc> => {
     return newOrder.save();
 }
 
+const createPayment = async (payment: BuildPaymentParams): Promise<PaymentDoc> => {
+    const newPayment = Payment.build(payment);
+    return newPayment.save();
+}
+
 const createMongooseId = () => {
     return new mongoose.Types.ObjectId().toHexString();
 }
@@ -32,5 +38,6 @@ const createMongooseId = () => {
 export {
     createOrder,
     createMongooseId,
+    createPayment,
     getAuthCookie,
 }
