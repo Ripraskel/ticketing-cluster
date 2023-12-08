@@ -9,7 +9,6 @@ export default ({ req }) => {
         })
     } else {
         // We must be on the client browser
-        console.log("Client side request");
         return axios.create({
             baseURL: '/'
         })

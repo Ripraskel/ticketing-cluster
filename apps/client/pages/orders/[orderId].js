@@ -3,7 +3,8 @@ import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
 import CheckoutForm from '../../components/stripeCheckoutForm';
 
-const stripePromise = loadStripe(process.env.STRIPE_KEY);
+// Publishable key so can be checked in
+const stripePromise = loadStripe('pk_test_51O5ZA2KzWMNoyulWin3m3EagtlV0cf12dp7Nmd0LMLyEKal0AhuhRtU5m1ol7NjY4QCbdr8cphe4KErGwRqe7urf000B4deurr');
 
 const order = ({order, paymentData}) => {
     const [secondsLeftToPurchase, setSecondsLeftToPurchase] = useState(0);
@@ -19,6 +20,7 @@ const order = ({order, paymentData}) => {
         const msLeft = new Date(order.expiresAt) - new Date();
         setSecondsLeftToPurchase(Math.round(msLeft/1000));
     }
+
     useEffect(() => {
         findTimeLeft();
         const timerId = setInterval(findTimeLeft, 1000);
@@ -27,7 +29,6 @@ const order = ({order, paymentData}) => {
             clearInterval(timerId);
         }
     });
-    
 
     const getCountDownMessage = () => {
         if (secondsLeftToPurchase > 0) {
@@ -37,7 +38,6 @@ const order = ({order, paymentData}) => {
                     <Elements stripe={stripePromise} options={options}>
                         <CheckoutForm paymentId={paymentData?.paymentId}/>
                     </Elements>
-                    <p>Payment secret: {paymentData?.clientSecret}</p>
                 </div>
            )
         } else {
@@ -65,8 +65,6 @@ order.getInitialProps = async (context, client, currentUser) => {
         paymentResponse = await client.post('/api/payments/intent', {
             orderId
         });
-        console.log("PaymentResponse", paymentResponse)
-
     } catch (err) {
         console.log("payment Res error")
     }

@@ -3,7 +3,6 @@ import buildServerClient from "../api/build-server-client";
 import Header from '../components/header';
 
 const AppComponent = ({ Component, pageProps }) => {
-    console.log(pageProps);
     return (
         <div>
             <Header currentUser={pageProps.currentUser} />

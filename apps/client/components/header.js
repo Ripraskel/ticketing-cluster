@@ -1,7 +1,6 @@
 import Link from 'next/link';
 
 export default ({currentUser}) => {
-    console.log(currentUser)
     const authLinks = [
         !currentUser && { label: 'Sign Up', href: '/auth/signup'},
         !currentUser && { label: 'Sign In', href: '/auth/signin'},

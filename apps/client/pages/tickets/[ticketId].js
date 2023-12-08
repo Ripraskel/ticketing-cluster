@@ -9,7 +9,6 @@ const ticket = ({ticket}) => {
             ticketId: ticket.id,
         }, 
         onSuccess: (order) => { 
-            console.log(order)
             Router.push(`/orders/${order.id}`)
         }
     });

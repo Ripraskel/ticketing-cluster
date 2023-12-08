@@ -27,13 +27,6 @@ const LandingPage = ({ currentUser, tickets }) => {
                 </thead>
                 <tbody>
                     {ticketList}
-                    <tr>
-                        <td>
-                            <Link href='/tickets/new'>
-                                Sell New Ticket
-                            </Link>
-                        </td>
-                    </tr>
                 </tbody>
             </table>
         </div>
@@ -42,7 +35,6 @@ const LandingPage = ({ currentUser, tickets }) => {
 
 LandingPage.getInitialProps = async (context, client, currentUser) => {
     const { data } = await client.get('/api/tickets');
-    console.log("Server")
     return { tickets: data }
 }
 

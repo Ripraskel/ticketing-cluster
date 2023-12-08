@@ -6,7 +6,7 @@ const payment = ({orderId, amount, status}) => {
                 Receipt
             </h1>
             <h4>Order ID: {orderId}</h4>
-            <h4>Amount: £{amount}</h4>
+            <h4>Amount: £{amount/100}</h4> {/* convert from pence*/}
             <h4>Status: {status}</h4>
         </div>
     );
