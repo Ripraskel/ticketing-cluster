@@ -12,5 +12,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: cd apps/common && npm install && npm run build
-      - run: cd app/auth && npm install && npm run test
+      - run: cd apps/auth && npm install && npm run test
     
