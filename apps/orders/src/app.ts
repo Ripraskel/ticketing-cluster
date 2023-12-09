@@ -2,7 +2,6 @@ import express, { Request, Response, NextFunction } from 'express';
 import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
 
-
 import { currentUser, errorHandler, NotFoundError } from '@ticketing/common';
 import { CreateOrderRouter } from './routes/new';
 import { ShowOrderRouter } from './routes/show';
