@@ -8,8 +8,7 @@
     "start": "ts-node-dev src/index.ts",
     "build": "tsc --project tsconfig.build.json",
     "lint": "eslint src",
-    "lint-fix": "eslint src --fix",
-    "test": "jest --runInBand --no-cache"
+    "lint-fix": "eslint src --fix"
   },
   "jest": {
     "maxConcurrency": 1,

@@ -1,0 +1,16 @@
+name: test-payments
+
+on:
+  pull_request:
+    paths:
+      - apps/payments/**
+      - apps/common/**
+     
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd apps/common && npm install && npm run build
+      - run: cd apps/payments && npm install && npm run test
+    
