@@ -9,8 +9,7 @@
     "build": "tsc --project tsconfig.build.json",
     "lint": "eslint src",
     "lint-fix": "eslint src --fix",
-    "test": "jest --runInBand --no-cache",
-    "test:ci": "jest"
+    "test": "jest --runInBand --no-cache"
   },
   "jest": {
     "maxConcurrency": 1,
