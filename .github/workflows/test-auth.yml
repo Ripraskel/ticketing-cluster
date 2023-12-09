@@ -1,0 +1,16 @@
+name: tests
+
+on:
+  pull_request:
+    paths:
+      - apps/auth/**
+      - apps/common/**
+     
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd apps/common && npm install && npm run build
+      - run: cd ../auth && npm install && npm run test
+    
