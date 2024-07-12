@@ -5,7 +5,7 @@ import { Order } from '../models/order';
 
 const router = express.Router();
 
-router.get('/api/orders/:orderId', requireAuth,
+router.get('/:orderId', requireAuth,
     [
         param('orderId').isMongoId().withMessage('Id must be valid')
     ], 

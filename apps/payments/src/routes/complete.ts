@@ -9,7 +9,7 @@ import { PaymentCreatedPublisher } from '../events/payment.publisher';
 
 const router = express.Router();
 
-router.post('/api/payments/complete', requireAuth, [
+router.post('/complete', requireAuth, [
     body('paymentId').isMongoId().withMessage('paymentId must be valid'),
 ], validateRequest,
     async (req: Request, res: Response, next: NextFunction) => {

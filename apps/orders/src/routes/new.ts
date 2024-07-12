@@ -11,7 +11,7 @@ const router = express.Router();
 // Could move to env variable or db at a later date.
 const EXPIRATION_WINDOW_SECONDS: number = 60; // 15 minutes in seconds
 
-router.post('/api/orders', requireAuth, [
+router.post('/', requireAuth, [
     body('ticketId').not().isEmpty().withMessage('Ticket ID is required'),
 ], validateRequest, 
 async (req: Request, res: Response, next: NextFunction) => {

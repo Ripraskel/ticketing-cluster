@@ -5,7 +5,7 @@ import { NotFoundError, validateRequest } from '@ticketing/common';
 
 const router = express.Router();
 
-router.get('/api/tickets/:id',
+router.get('/:id',
     [
         param('id').isMongoId().withMessage('Id must be valid')
     ], 

@@ -7,7 +7,7 @@ import { OrderCancelledPublisher } from '../events/order.publishers';
 
 const router = express.Router();
 
-router.patch('/api/orders/cancel/:orderId', requireAuth,
+router.patch('/:orderId', requireAuth,
     [
         param('orderId').isMongoId().withMessage('Id must be valid'),
     ], 

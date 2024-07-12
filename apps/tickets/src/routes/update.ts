@@ -7,7 +7,7 @@ import { TicketUpdatedPublisher } from '../events/ticket.publishers';
 
 const router = express.Router();
 
-router.put('/api/tickets/:id', requireAuth, [
+router.put('/:id', requireAuth, [
     param('id').isMongoId().withMessage('Id must be valid'),
     body('title').not().isEmpty().withMessage('Title is required'),
     body('price').isFloat({ gt: 0 }).withMessage('Price must be greater than 0')

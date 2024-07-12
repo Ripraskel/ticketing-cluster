@@ -27,6 +27,7 @@ app.use(IndexTicketRouter);
 app.use(UpdateTicketRouter);
 
 app.all('*', async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Req path:", req.path)
     next(new NotFoundError());
 });
 

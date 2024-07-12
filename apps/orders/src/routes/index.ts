@@ -4,7 +4,7 @@ import { requireAuth } from '@ticketing/common';
 
 const router = express.Router();
 
-router.get('/api/orders', requireAuth,
+router.get('/', requireAuth,
     async (req: Request, res: Response, next: NextFunction) => {
         try {
             const orders = await Order.find({

@@ -7,7 +7,7 @@ import { Payment } from '../models/payment';
 
 const router = express.Router();
 
-router.post('/api/payments/intent', requireAuth, [
+router.post('/intent', requireAuth, [
     body('orderId').isMongoId().withMessage('orderId must be valid'),
 ], validateRequest, 
 async (req: Request, res: Response, next: NextFunction) => {
