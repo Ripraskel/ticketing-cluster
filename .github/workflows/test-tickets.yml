@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: cd apps/common && npm install && npm run build
-      - run: cd apps/tickets && npm install && npm run test
+      - run: cd apps && npm ci
+      - run: cd apps && npm run build -w @ticketing/common
+      - run: cd apps && npm run test -w @ticketing/tickets
     
