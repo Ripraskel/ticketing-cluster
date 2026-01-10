@@ -13,7 +13,8 @@
     "@stripe/stripe-js": "^2.1.11",
     "axios": "^1.3.4",
     "bootstrap": "^5.2.3",
-    "next": "^13.2.4",
+    "next": "^16.1.1",
+    "react": "^18.2.0",
     "react-app": "^1.1.2",
     "react-dom": "^18.2.0"
   }

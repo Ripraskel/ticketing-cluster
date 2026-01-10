@@ -21,6 +21,6 @@
     "payments"
   ],
   "dependencies": {
-    "typescript": "^5.0.3"
+    "typescript": "^4.9.5"
   }
 }
